@@ -20,7 +20,7 @@ class CreateUserDto {
 exports.CreateUserDto = CreateUserDto;
 __decorate([
     (0, swagger_1.ApiProperty)({
-        example: 'John Doe',
+        example: 'Ali Valieyev',
         description: 'Full name of the user',
         minLength: 4,
     }),
@@ -31,7 +31,7 @@ __decorate([
 ], CreateUserDto.prototype, "full_name", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({
-        example: 'johndoe@example.com',
+        example: 'ali000@example.com',
         description: 'Email address of the user',
     }),
     (0, class_validator_1.IsEmail)(),

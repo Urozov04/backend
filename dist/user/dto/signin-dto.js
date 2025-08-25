@@ -18,12 +18,12 @@ class SignInUserDto {
 }
 exports.SignInUserDto = SignInUserDto;
 __decorate([
-    (0, swagger_1.ApiProperty)({ example: 'ahmad@gmail.com' }),
+    (0, swagger_1.ApiProperty)({ example: 'laylo@gmail.com' }),
     (0, class_validator_1.IsEmail)(),
     __metadata("design:type", String)
 ], SignInUserDto.prototype, "email", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ example: 'Ahmad123!' }),
+    (0, swagger_1.ApiProperty)({ example: 'Laylo123!' }),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], SignInUserDto.prototype, "password", void 0);

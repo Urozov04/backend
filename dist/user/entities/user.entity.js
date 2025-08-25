@@ -33,7 +33,7 @@ __decorate([
 ], UserEntity.prototype, "id", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({
-        example: 'John Doe',
+        example: 'Ali Valiyev',
         description: 'Full name of the user',
     }),
     (0, typeorm_1.Column)({ type: 'varchar', name: 'full_name' }),
@@ -41,7 +41,7 @@ __decorate([
 ], UserEntity.prototype, "full_name", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({
-        example: 'johndoe@example.com',
+        example: 'ali000@example.com',
         description: 'Email address of the user',
     }),
     (0, typeorm_1.Column)({ type: 'varchar', name: 'email', unique: true }),

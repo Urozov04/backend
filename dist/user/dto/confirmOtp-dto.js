@@ -19,7 +19,7 @@ class ConfirmOtpDto {
 exports.ConfirmOtpDto = ConfirmOtpDto;
 __decorate([
     (0, swagger_1.ApiProperty)({
-        example: 'dostonergashev@gmail.com',
+        example: 'johnDoe@gmail.com',
     }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
