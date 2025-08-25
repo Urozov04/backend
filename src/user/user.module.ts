@@ -5,16 +5,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from './entities/user.entity';
 import { MailModule } from 'src/utils/mail/mail.module';
 import { TokenService } from 'src/utils/token/generateToken';
-import { FileEntity } from './entities/file.entity';
 import { FileModule } from 'src/utils/file/file.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([UserEntity, FileEntity]),
-    MailModule,
-    FileModule,
-  ],
+  imports: [TypeOrmModule.forFeature([UserEntity]), MailModule, FileModule],
   controllers: [UserController],
   providers: [UserService, TokenService],
+  exports: [UserService],
 })
 export class UserModule {}

@@ -5,20 +5,18 @@ import config from 'src/config';
 
 @Module({
   imports: [
-    MailerModule.forRootAsync({
-      useFactory: async () => ({
-        transport: {
-          host: config.SMTP_HOST,
-          secure: false,
-          auth: {
-            user: config.SMTP_USER,
-            pass: config.SMTP_PASS,
-          },
+    MailerModule.forRoot({
+      transport: {
+        host: config.SMTP_HOST,
+        secure: false,
+        auth: {
+          user: config.SMTP_USER,
+          pass: config.SMTP_PASS,
         },
-        defaults: {
-          from: config.SMTP_USER,
-        },
-      }),
+      },
+      defaults: {
+        from: config.SMTP_USER,
+      },
     }),
   ],
   providers: [MailService],

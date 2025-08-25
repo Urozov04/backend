@@ -18,14 +18,14 @@ export class UserEntity {
   id: number;
 
   @ApiProperty({
-    example: 'Ali Valiyev',
+    example: 'John Doe',
     description: 'Full name of the user',
   })
   @Column({ type: 'varchar', name: 'full_name' })
   full_name: string;
 
   @ApiProperty({
-    example: 'ali000@example.com',
+    example: 'johndoe@example.com',
     description: 'Email address of the user',
   })
   @Column({ type: 'varchar', name: 'email', unique: true })

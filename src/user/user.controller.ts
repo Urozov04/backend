@@ -6,13 +6,11 @@ import {
   Param,
   Patch,
   Post,
-  Query,
   Req,
   Res,
   UseGuards,
   UseInterceptors,
   ParseIntPipe,
-  UploadedFile,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -22,7 +20,6 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { Request, Response } from 'express';
 import { CacheInterceptor } from '@nestjs/cache-manager';
 import { AuthGuard } from 'src/guard/authGuard';
-import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 
 import {
   ApiTags,
@@ -30,8 +27,6 @@ import {
   ApiResponse,
   ApiBody,
   ApiBearerAuth,
-  ApiConsumes,
-  ApiQuery,
   ApiParam,
 } from '@nestjs/swagger';
 
@@ -197,77 +192,5 @@ export class UserController {
   })
   async deleteUser(@Param('id', ParseIntPipe) id: number) {
     return this.userService.deleteUser(id);
-  }
-
-  @Post('upload-profile-image')
-  @ApiOperation({ summary: 'Upload one profile image' })
-  @ApiConsumes('multipart/form-data')
-  @UseInterceptors(FileInterceptor('file'))
-  @ApiBody({
-    description: 'Upload one profile image',
-    schema: {
-      type: 'object',
-      properties: {
-        file: {
-          type: 'string',
-          format: 'binary',
-        },
-      },
-    },
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'File uploaded successfully',
-    schema: {
-      example: {
-        statusCode: 200,
-        message: 'File uploaded successfully',
-        data: {
-          file: {
-            id: 1,
-            path: 'http://localhost:3000/uploads/image_12345.jpg',
-            createdAt: '2025-08-23T14:55:00.000Z',
-          },
-        },
-      },
-    },
-  })
-  @ApiResponse({ status: 400, description: 'Invalid file format' })
-  async uploadProfileImage(@UploadedFile() file?: Express.Multer.File) {
-    return this.userService.uploadImage(file);
-  }
-
-  @Delete('delete-image/:id')
-  @ApiOperation({ summary: 'Delete image by file ID' })
-  @ApiParam({
-    name: 'id',
-    type: Number,
-    description: 'ID of the file to delete',
-    required: true,
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Image deleted successfully',
-    schema: {
-      example: {
-        statusCode: 200,
-        message: 'Image deleted successfully',
-        data: null,
-      },
-    },
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'File not found',
-    schema: {
-      example: {
-        statusCode: 404,
-        message: 'File with ID 1 not found',
-        error: 'Not Found',
-      },
-    },
-  })
-  async deleteImage(@Param('id', ParseIntPipe) fileId: number) {
-    return this.userService.deleteImageById(fileId);
   }
 }

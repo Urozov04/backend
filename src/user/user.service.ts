@@ -13,7 +13,6 @@ import { UserEntity } from './entities/user.entity';
 import { catchError } from 'src/lib/exception';
 import { successRes } from 'src/lib/success';
 import { generateOtp } from 'src/utils/otp-generator/otp-generator';
-import { MailService } from 'src/utils/mail/mail.service';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { SignInUserDto } from './dto/signin-dto';
@@ -25,7 +24,7 @@ import * as bcrypt from 'bcrypt';
 import { Role } from 'src/enum';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { FileService } from 'src/utils/file/file.service';
-import { FileEntity } from './entities/file.entity';
+import { MailService } from 'src/utils/mail/mail.service';
 
 export interface Payload {
   id: number;
@@ -37,13 +36,11 @@ export class UserService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepo: Repository<UserEntity>,
-    @InjectRepository(FileEntity)
-    private readonly fileRepo: Repository<FileEntity>,
     private readonly mailService: MailService,
     @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
     private readonly tokenService: TokenService,
-    private fileService: FileService,
   ) {}
+
 
   async signUpUser(createUserDto: CreateUserDto): Promise<object> {
     try {
@@ -59,12 +56,11 @@ export class UserService {
 
       const hashed_pass = await bcrypt.hash(createUserDto.password, 10);
 
-      const newUser = {
+      const newUser = this.userRepo.create({
         ...createUserDto,
         password: hashed_pass,
-      };
+      });
 
-      this.userRepo.create(createUserDto);
       await this.userRepo.save(newUser);
 
       const otp = generateOtp();
@@ -73,6 +69,7 @@ export class UserService {
         'Welcome to online marketplace',
         otp,
       );
+
       await this.cacheManager.set(createUserDto.email, otp, 120000);
       return successRes(
         {},
@@ -194,39 +191,4 @@ export class UserService {
     }
   }
 
-  async uploadImage(file?: Express.Multer.File) {
-    try {
-      if (!file) {
-        throw new BadRequestException('No file uploaded');
-      }
-
-      const uploadedPath = await this.fileService.createFile(file);
-
-      if (!uploadedPath) {
-        throw new InternalServerErrorException('File upload failed');
-      }
-
-      const fileEntity = this.fileRepo.create({ path: uploadedPath });
-      const savedFile = await this.fileRepo.save(fileEntity);
-
-      return successRes(savedFile, 200, 'File uploaded and saved successfully');
-    } catch (error) {
-      return catchError(error);
-    }
-  }
-
-  async deleteImageById(fileId: number) {
-    try {
-      const file = await this.fileRepo.findOne({ where: { id: fileId } });
-      if (!file) throw new NotFoundException('File not found');
-      
-      await this.fileService.deleteFile(file.path);
-
-      await this.fileRepo.delete(fileId);
-
-      return successRes({}, 200, 'Image deleted successfully');
-    } catch (error) {
-      return catchError(error);
-    }
-  }
 }
