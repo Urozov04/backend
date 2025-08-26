@@ -17,7 +17,8 @@ const jwt_1 = require("@nestjs/jwt");
 const core_1 = require("@nestjs/core");
 const serve_static_1 = require("@nestjs/serve-static");
 const path_1 = require("path");
-const file_entity_1 = require("./user/entities/file.entity");
+const images_module_1 = require("./image/images.module");
+const image_entity_1 = require("./image/entities/image.entity");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -29,7 +30,7 @@ exports.AppModule = AppModule = __decorate([
                 url: config_1.default.DB_URL,
                 synchronize: true,
                 autoLoadEntities: true,
-                entities: [user_entity_1.UserEntity, file_entity_1.FileEntity],
+                entities: [user_entity_1.UserEntity, image_entity_1.FileEntity],
                 ssl: {
                     rejectUnauthorized: false,
                 },
@@ -43,6 +44,7 @@ exports.AppModule = AppModule = __decorate([
             }),
             jwt_1.JwtModule.register({ global: true }),
             user_module_1.UserModule,
+            images_module_1.ImagesModule,
         ],
         providers: [
             {

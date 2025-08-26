@@ -48,14 +48,15 @@ export class UserService {
         where: { email: createUserDto.email },
       });
 
+      
       if (existsEmail) {
         throw new ConflictException(
           `User with email ${createUserDto.email} already exists`,
         );
       }
 
-      const hashed_pass = await bcrypt.hash(createUserDto.password, 10);
 
+      const hashed_pass = await bcrypt.hash(createUserDto.password, 10);
       const newUser = this.userRepo.create({
         ...createUserDto,
         password: hashed_pass,

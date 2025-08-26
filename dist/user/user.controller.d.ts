@@ -21,14 +21,4 @@ export declare class UserController {
         message: string;
         data: any;
     }>;
-    uploadProfileImage(file?: Express.Multer.File): Promise<{
-        statusCode: number;
-        message: string;
-        data: any;
-    }>;
-    deleteImage(fileId: number): Promise<{
-        statusCode: number;
-        message: string;
-        data: any;
-    }>;
 }

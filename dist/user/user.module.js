@@ -14,20 +14,16 @@ const typeorm_1 = require("@nestjs/typeorm");
 const user_entity_1 = require("./entities/user.entity");
 const mail_module_1 = require("../utils/mail/mail.module");
 const generateToken_1 = require("../utils/token/generateToken");
-const file_entity_1 = require("./entities/file.entity");
 const file_module_1 = require("../utils/file/file.module");
 let UserModule = class UserModule {
 };
 exports.UserModule = UserModule;
 exports.UserModule = UserModule = __decorate([
     (0, common_1.Module)({
-        imports: [
-            typeorm_1.TypeOrmModule.forFeature([user_entity_1.UserEntity, file_entity_1.FileEntity]),
-            mail_module_1.MailModule,
-            file_module_1.FileModule,
-        ],
+        imports: [typeorm_1.TypeOrmModule.forFeature([user_entity_1.UserEntity]), mail_module_1.MailModule, file_module_1.FileModule],
         controllers: [user_controller_1.UserController],
         providers: [user_service_1.UserService, generateToken_1.TokenService],
+        exports: [user_service_1.UserService],
     })
 ], UserModule);
 //# sourceMappingURL=user.module.js.map

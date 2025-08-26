@@ -20,27 +20,21 @@ const user_entity_1 = require("./entities/user.entity");
 const exception_1 = require("../lib/exception");
 const success_1 = require("../lib/success");
 const otp_generator_1 = require("../utils/otp-generator/otp-generator");
-const mail_service_1 = require("../utils/mail/mail.service");
 const cache_manager_1 = require("@nestjs/cache-manager");
 const generateToken_1 = require("../utils/token/generateToken");
 const cookie_1 = require("../utils/cookie/cookie");
 const bcrypt = require("bcrypt");
-const file_service_1 = require("../utils/file/file.service");
-const file_entity_1 = require("./entities/file.entity");
+const mail_service_1 = require("../utils/mail/mail.service");
 let UserService = class UserService {
     userRepo;
-    fileRepo;
     mailService;
     cacheManager;
     tokenService;
-    fileService;
-    constructor(userRepo, fileRepo, mailService, cacheManager, tokenService, fileService) {
+    constructor(userRepo, mailService, cacheManager, tokenService) {
         this.userRepo = userRepo;
-        this.fileRepo = fileRepo;
         this.mailService = mailService;
         this.cacheManager = cacheManager;
         this.tokenService = tokenService;
-        this.fileService = fileService;
     }
     async signUpUser(createUserDto) {
         try {
@@ -48,14 +42,14 @@ let UserService = class UserService {
                 where: { email: createUserDto.email },
             });
             if (existsEmail) {
+                console.log(100000000);
                 throw new common_1.ConflictException(`User with email ${createUserDto.email} already exists`);
             }
             const hashed_pass = await bcrypt.hash(createUserDto.password, 10);
-            const newUser = {
+            const newUser = this.userRepo.create({
                 ...createUserDto,
                 password: hashed_pass,
-            };
-            this.userRepo.create(createUserDto);
+            });
             await this.userRepo.save(newUser);
             const otp = (0, otp_generator_1.generateOtp)();
             await this.mailService.sendOtp(createUserDto.email, 'Welcome to online marketplace', otp);
@@ -152,46 +146,13 @@ let UserService = class UserService {
             return (0, exception_1.catchError)(error);
         }
     }
-    async uploadImage(file) {
-        try {
-            if (!file) {
-                throw new common_1.BadRequestException('No file uploaded');
-            }
-            const uploadedPath = await this.fileService.createFile(file);
-            if (!uploadedPath) {
-                throw new common_1.InternalServerErrorException('File upload failed');
-            }
-            const fileEntity = this.fileRepo.create({ path: uploadedPath });
-            const savedFile = await this.fileRepo.save(fileEntity);
-            return (0, success_1.successRes)(savedFile, 200, 'File uploaded and saved successfully');
-        }
-        catch (error) {
-            return (0, exception_1.catchError)(error);
-        }
-    }
-    async deleteImageById(fileId) {
-        try {
-            const file = await this.fileRepo.findOne({ where: { id: fileId } });
-            if (!file)
-                throw new common_1.NotFoundException('File not found');
-            await this.fileService.deleteFile(file.path);
-            await this.fileRepo.delete(fileId);
-            return (0, success_1.successRes)({}, 200, 'Image deleted successfully');
-        }
-        catch (error) {
-            return (0, exception_1.catchError)(error);
-        }
-    }
 };
 exports.UserService = UserService;
 exports.UserService = UserService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(user_entity_1.UserEntity)),
-    __param(1, (0, typeorm_1.InjectRepository)(file_entity_1.FileEntity)),
-    __param(3, (0, common_1.Inject)(cache_manager_1.CACHE_MANAGER)),
+    __param(2, (0, common_1.Inject)(cache_manager_1.CACHE_MANAGER)),
     __metadata("design:paramtypes", [typeorm_2.Repository,
-        typeorm_2.Repository,
-        mail_service_1.MailService, Object, generateToken_1.TokenService,
-        file_service_1.FileService])
+        mail_service_1.MailService, Object, generateToken_1.TokenService])
 ], UserService);
 //# sourceMappingURL=user.service.js.map

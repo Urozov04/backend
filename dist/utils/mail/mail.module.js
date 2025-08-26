@@ -17,20 +17,18 @@ exports.MailModule = MailModule;
 exports.MailModule = MailModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            mailer_1.MailerModule.forRootAsync({
-                useFactory: async () => ({
-                    transport: {
-                        host: config_1.default.SMTP_HOST,
-                        secure: false,
-                        auth: {
-                            user: config_1.default.SMTP_USER,
-                            pass: config_1.default.SMTP_PASS,
-                        },
+            mailer_1.MailerModule.forRoot({
+                transport: {
+                    host: config_1.default.SMTP_HOST,
+                    secure: false,
+                    auth: {
+                        user: config_1.default.SMTP_USER,
+                        pass: config_1.default.SMTP_PASS,
                     },
-                    defaults: {
-                        from: config_1.default.SMTP_USER,
-                    },
-                }),
+                },
+                defaults: {
+                    from: config_1.default.SMTP_USER,
+                },
             }),
         ],
         providers: [mail_service_1.MailService],
